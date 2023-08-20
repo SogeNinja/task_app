@@ -24,7 +24,7 @@ class _TaskViewState extends State<TaskView> {
               Navigator.of(context).pop();
             },
         ),
-        middle: Text(taskData.taskName),
+        middle: Text(taskData.name),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
           child: const Icon(Icons.more_horiz),
@@ -35,7 +35,7 @@ class _TaskViewState extends State<TaskView> {
       ),
       child: SafeArea(
         child: CupertinoListSection(
-          children: [CupertinoListTile(title: Text(taskData.taskDescription)),]
+          children: [CupertinoListTile(title: Text(taskData.description)),]
         )
       )
     );
@@ -46,20 +46,19 @@ class _TaskViewState extends State<TaskView> {
       context: context,
       builder: (BuildContext context) => CupertinoActionSheet(
         title: const Text('Title'),
-        message: const Text('Message'),
         actions: <CupertinoActionSheetAction>[
           CupertinoActionSheetAction(
             isDefaultAction: true,
             onPressed: () {
               Navigator.pop(context);
             },
-            child: const Text('Default Action'),
+            child: const Text('Editar'),
           ),
           CupertinoActionSheetAction(
             onPressed: () {
               Navigator.pop(context);
             },
-            child: const Text('Action'),
+            child: const Text('Borrar'),
           ),
         ],
       ),

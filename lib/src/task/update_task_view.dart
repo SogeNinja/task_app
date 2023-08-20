@@ -1,26 +1,38 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:task_app/src/db/testing.dart';
 import 'package:task_app/src/task/task.dart';
 
-class CreateTaskView extends StatefulWidget {
-  const CreateTaskView({ super.key });
-  static const routeName = "/create_task";
+class UpdateTaskView extends StatefulWidget {
+  const UpdateTaskView({ super.key });
+  static const routeName = "/update_task";
   @override
-  State<CreateTaskView> createState() => _CreateTaskViewState();
+  State<UpdateTaskView> createState() => _UpdateTaskViewState();
 }
 
-class _CreateTaskViewState extends State<CreateTaskView> {
+class _UpdateTaskViewState extends State<UpdateTaskView> {
   final TextEditingController _taskNameController = TextEditingController(); 
   final TextEditingController _taskDescriptionController = TextEditingController();
   DateTime selectedHour = DateTime.now();
+  late Task taskData;
+  @override
+  void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {
+        taskData = ModalRoute.of(context)!.settings.arguments as Task;
+        _taskNameController.text = taskData.name;
+        _taskDescriptionController.text = taskData.description;
+        selectedHour = taskData.selectedHour;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
           child: const Icon(Icons.arrow_back_ios_new),
@@ -40,6 +52,9 @@ class _CreateTaskViewState extends State<CreateTaskView> {
               ),
               CupertinoTextField(
                 controller: _taskNameController,
+                onChanged: (value) {
+                  taskData.name = value;
+                },
                 placeholder: "Nombre",
               ),
               Container(height: 20),
@@ -48,6 +63,9 @@ class _CreateTaskViewState extends State<CreateTaskView> {
                 child: CupertinoTextField(
                   maxLines: 10,
                   controller: _taskDescriptionController,
+                  onChanged: (value) {
+                    taskData.description = value;
+                  },
                   placeholder: "Descripción",
                 )
               ),
@@ -64,6 +82,7 @@ class _CreateTaskViewState extends State<CreateTaskView> {
                         use24hFormat: true,
                         onDateTimeChanged: (DateTime newTime) {
                           setState(() => selectedHour = newTime);
+                          taskData.selectedHour = newTime;
                         },
                       ),
                     ),
@@ -78,19 +97,11 @@ class _CreateTaskViewState extends State<CreateTaskView> {
               ),
               Container(height: 20,),
               CupertinoButton.filled(
-                child: const Text("Insertar",
+                child: const Text("Actualizar",
                 style: TextStyle(color: Colors.white),
                 ), 
                 onPressed: () async {
-                  final Task task = Task(
-                    id: DateTime.now().microsecondsSinceEpoch, 
-                    name: _taskNameController.text, 
-                    description: _taskDescriptionController.text, 
-                    type: 0,
-                    selectedDays: [],
-                    selectedHour: selectedHour
-                  );
-                  Map<String,dynamic> response = await insertTask(task);
+                  Map<String,dynamic> response = await updateTask(taskData);
                   if(response["statusCode"] == 200){
                       Navigator.of(context).pop();
                   }else if(response["statusCode"] == 500){

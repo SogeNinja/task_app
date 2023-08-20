@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:task_app/src/task/create_task_view.dart';
+import 'package:task_app/src/task/update_task_view.dart';
 
 import 'task/task_view.dart';
 import 'task/task_list_view.dart';
@@ -39,6 +41,10 @@ class MyApp extends StatelessWidget {
                 return const TaskListView();
               case TaskView.routeName:
                 return const TaskView();
+              case CreateTaskView.routeName:
+                return const CreateTaskView();
+              case UpdateTaskView.routeName:
+                return const UpdateTaskView();
               default:
                 return const TaskListView();
             }

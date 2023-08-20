@@ -1,12 +1,34 @@
 /// A placeholder class that represents an entity or model.
 class Task {
-  const Task(
-    this.id,
-    this.taskName,
-    this.taskDescription
-  );
-
   final int id;
-  final String taskName;
-  final String taskDescription;
+  String name;
+  String description;
+  int type;
+  List<int> selectedDays;
+  DateTime selectedHour;
+
+  Task({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.type,
+    required this.selectedDays,
+    required this.selectedHour
+  });
+
+  Map<String,dynamic> toMap(){
+    return {
+      'id':id,
+      'name':name,
+      'description':description,
+      'type':type,
+      'selectedDays':selectedDays.toString(),
+      'selectedHour':selectedHour.toString(),
+    };
+  }
+
+  @override
+  String toString() {
+    return 'Task{id: $id, name: $name, description: $description, type: $type, selectedDays: $selectedDays, selectedHour: $selectedHour}';
+  }
 }
